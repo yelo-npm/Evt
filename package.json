@@ -1,0 +1,28 @@
+{
+  "name": "Evt",
+  "version": "0.0.1",
+  "description": "Simple event emitter mixer for node and the browser",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha -R list"
+  },
+  "devDependencies": {
+    "chai": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/yelo-npm/Evt.git"
+  },
+  "keywords": [
+    "events"
+  ],
+  "author": "xananax@yelostudio.com",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "chai": "~1.5.0"
+  }
+}

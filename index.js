@@ -17,6 +17,10 @@
 	var methods = [
 		function on(){
 			var evts, args, e = (args = slice.call(arguments)).shift();
+			if(typeof e == 'function'){
+				args.unshift(e);
+				e = '*';
+			}
 			(evts = ((this._events = this._events || {})[e] = this._events[e]	|| [])).push.apply(evts,args);
 			return this;
 		}
@@ -27,13 +31,19 @@
 			return this;
 		}
 	,	function trigger(event /* , args... */){
-			var evts = (this._events = this._events || {})[event] || null
-			,	i = evts? evts.length : 0
-			,	args = i ? slice.call(arguments,1) : un
+			var evts = (this._events = this._events || {})[(typeof event !== 'string')? event.type : event] || null
+			,	l = evts? evts.length : 0
+			,	args = l ? slice.call(arguments) : un
+			,	i = 0
 			;
-			if(!i){return false;}
-			for(i;i--;){
+			if(!l){return false;}
+			for(i;i<l;i++){
 				evts[i].apply(this,args);
+			}
+			if(event != '*' && (evts = this._events['*']) && (l = evts.length)){
+				for(i=0;i<l;i++){
+					evts[i].apply(this,args);
+				}
 			}
 			return this;
 		}

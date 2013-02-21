@@ -63,4 +63,66 @@ describe('Evt',function(){
 		a.on('someEvent',function(){done();})
 		a.trigger('someEvent');
 	})
+	it('Should allow to remove events',function(){
+		var a = Evt();
+		var fn = function(){}
+		a.on('someEvent',fn);
+		a.off('someEvent',fn);
+		expect(a._events['someEvent'].length).to.be.equal(0);
+	})
+	it('Should allow to add multiple events',function(done){
+		var a = Evt();
+		var b = 0;
+		var c = function(){
+			b++;
+		}
+		a.on('someEvent',c,c,c,c,function(){
+			expect(b).to.be.equal(4);
+			done();
+		});
+		a.trigger('someEvent');
+	})
+	it('Should allow to listen to all events by passing the star "*" event',function(done){
+		var a = Evt();
+		a.on('*',function(){done();})
+		a.on('someOtherEvent',function(){});
+		a.trigger('someOtherEvent');
+	})
+	it('Should allow to listen to all events if no event name is passed',function(done){
+		var a = Evt();
+		a.on(function(){done();})
+		a.on('someOtherEvent',function(){});
+		a.trigger('someOtherEvent');
+	})
+	it('Should pass arguments',function(done){
+		var a = Evt();
+		a.on('someEvent',function(){
+			expect(arguments.length).to.be.equal(4);
+			done();
+		});
+		a.trigger('someEvent','a','b','c');
+	})
+	it('Should allow to trigger an object event as long as this object has a "type" property',function(done){
+		var a = Evt();
+		var e = {
+			type:'someEvent'
+		,	trigger:'someObject'
+		,	someProperty:'yup'
+		}
+		var props = {}
+		a.on('someEvent',function(evt,properties){
+			expect(evt).to.be.equal(e);
+			expect(properties).to.be.equal(props);
+			done();
+		});
+		a.trigger(e,props);
+	})
+	it('Should set the context of the callback to the object triggering the event',function(done){
+		var a = Evt();
+		a.on('someEvent',function(){
+			expect(this).to.be.equal(a);
+			done();
+		});
+		a.trigger('someEvent');
+	})
 })
